@@ -6,7 +6,7 @@ var gulp = require('gulp'),
 var BUILD_DIR = 'build/';
 
 function compile() {
-  var bundler = browserify('src/index.js');
+  var bundler = browserify('src/todoList.js');
   
   return bundler
     .transform('babelify', { presets: ['es2015', 'react'] })
