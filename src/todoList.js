@@ -105,12 +105,14 @@ class TodoItem extends React.Component {
 
     render() {
         return (
-            <li>
-                <button onClick={this.complete}>O</button>
-                <button onClick={this.delete}>X</button> - 
-                <span style={(this.props.completed ? this.style.completed : this.style.unCompleted)}>
+            <li className="todoItem">
+                <div>
+                <input type="checkbox" onClick={this.complete} />
+                <label style={(this.props.completed ? this.style.completed : this.style.unCompleted)}>
                     {this.props.text}
-                </span>
+                </label>
+                <button onClick={this.delete} className="deleteButton">X</button> 
+                </div>
             </li>
         )
     }
@@ -119,7 +121,6 @@ class TodoItem extends React.Component {
 class AddTodoItem extends React.Component{
     constructor(props){
         super(props);
-
         this.state = { value: "" };
 
         this.onKeyPress = this.onKeyPress.bind(this);
@@ -139,7 +140,8 @@ class AddTodoItem extends React.Component{
 
     render(){
         return (
-            <input type="text" placeholder="Add a new item" 
+            <input type="text" placeholder="Add a new item"
+                   className="block"
                    onKeyPress={this.onKeyPress} 
                    value={this.state.value}
                    onChange={this.handleChange}
