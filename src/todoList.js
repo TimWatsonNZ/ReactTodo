@@ -11,10 +11,12 @@ class TodoForm extends React.Component {
         };
 
         this.addItem = this.addItem.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
+        this.completeItem = this.completeItem.bind(this);
     }
 
     addItem(todoItemText){
-        const todo = { id: this.state.idCount, text: todoItemText };
+        const todo = { id: this.state.idCount, text: todoItemText, completed: true };
         const updatedIds = this.state.idCount + 1;
         this.state.todos.push(todo);
 
@@ -22,12 +24,24 @@ class TodoForm extends React.Component {
         this.setState({idCount: updatedIds});
     }
 
-    completeItem(){
-        console.log("Complete item");
+    completeItem(itemId){
+        const updatedTodos = this.state.todos.map((todo) =>{
+            if(todo.id === itemId){
+                todo.completed = !todo.completed;
+                console.log("Updated item");
+            }
+            return todo;
+        });
+
+        this.setState({todos: updatedTodos});
     }
 
-    deleteItem(){
-        console.log("Delete item");
+    deleteItem(itemId){
+        const filteredList = this.state.todos.filter((todo) => {
+            if(todo.id !== itemId) return todo;
+        });
+
+        this.setState({todos: filteredList});
     }
 
     render (){
@@ -51,8 +65,10 @@ class TodoList extends React.Component{
     render(){
         const nodes = this.props.todos.map((todo) => {
             return (
-                <TodoItem key={todo.id} 
-                          text={todo.text} 
+                <TodoItem key={todo.id}
+                          id={todo.id}
+                          text={todo.text}
+                          completed={todo.completed}
                           deleteItem={this.props.deleteItem}
                           completeItem={this.props.completeItem}
                           ></TodoItem>   )
@@ -65,14 +81,36 @@ class TodoItem extends React.Component {
     constructor(props){
         super(props);
 
-        // State has completion
-        // and text?
+        this.style = { 
+            Completed: {
+                textDecoration: ""
+            },
+            unCompleted: {
+                textDecoration: "line-through"
+            }
+        }; 
+        
+        this.complete = this.complete.bind(this);
+        this.delete = this.delete.bind(this);
     }
+
+    complete(){
+        console.log("complete");
+        this.props.completeItem(this.props.id);
+    }
+
+    delete(){
+        this.props.deleteItem(this.props.id);
+    }
+
     render() {
         return (
             <li>
-                <button onClick={this.props.completeItem}>O</button>
-                <button onClick={this.props.deleteItem}>X</button> - {this.props.text}
+                <button onClick={this.complete}>O</button>
+                <button onClick={this.delete}>X</button> - 
+                <span style={(this.props.completed ? this.style.completed : this.style.unCompleted)}>
+                    {this.props.text}
+                </span>
             </li>
         )
     }
